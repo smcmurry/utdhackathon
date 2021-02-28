@@ -32,23 +32,40 @@ async def on_message(message):
     if message.content == 'hello':
         await message.channel.send("Hello, there.")
     elif message.content == 'help':
+        await message.channel.send("'add professor 'DISCORD ID': adds a user to the list of professors and gives them access to professor only commands.(PROFESSOR ONLY)'")
+        await message.channel.send("'add resource 'URL': adds a URL to the list of resources that students can access.(PROFESSOR ONLY)'")
+        await message.channel.send("'resources: shows list of all professor resources that they have added.'")
         await message.channel.send("'here: adds student to list of attendance'")
-        await message.channel.send("'attendance: shows list of students that attended class.'")
-        await message.channel.send("'clear attendance: clears list of students for next class.'")
+        await message.channel.send("'attendance: shows list of students that attended class.(PROFESSOR ONLY)'")
+        await message.channel.send("'clear attendance: clears list of students for next class.(PROFESSOR ONLY)'")
         await message.channel.send("'? 'QUESTION': adds question to pending question list.'")
         await message.channel.send("'questions: shows all pending questions.'")
         await message.channel.send("'professor info 'PROFESSOR NAME': Shows professors department and ratemyprofessor ratings.'")
         await message.channel.send("'grade distribution 'SUBJECT''CATALOG NUMBER''SEMESTER''YEAR':\
              Shows grade distributions for all sections and professors.'")
         #grade distribution CS 2336 Summer 2018
+    elif message.content.startswith('add professor'):
+        for teacher in teachers:
+            if message.author.id == teacher:
+                teachers.append(int(message.content[13:]))
+                await message.channel.send("Professor Added!")
+                break
     elif message.content == 'attendance':
-        await message.channel.send(attendance)
+        for teacher in teachers:
+            if message.author.id == teacher:
+                await message.channel.send(attendance)
     elif message.content == 'clear attendance':
-        await message.channel.send("Attendance Cleared!")
-        attendance.clear()
+        for teacher in teachers:
+            if message.author.id == teacher:
+                await message.channel.send("Attendance Cleared!")
+                attendance.clear()
+                break
     elif message.content.startswith('add resource'):
-        resources.append(message.content[12:])
-        await message.channel.send("Resource Added!")
+        for teacher in teachers:
+            if message.author.id == teacher:
+                resources.append(message.content[12:])
+                await message.channel.send("Resource Added!")
+                break
     elif message.content == 'resources':
         await message.channel.send(resources)
     elif message.content == 'encode key':
