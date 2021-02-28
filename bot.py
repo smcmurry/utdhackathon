@@ -3,6 +3,9 @@ import os
 import discord
 import base64
 import ratemyprofessor
+import json
+import matplotlib.pyplot as plt
+
 
 client = discord.Client()
 
@@ -32,6 +35,9 @@ async def on_message(message):
         await message.channel.send("'? 'QUESTION': adds question to pending question list.'")
         await message.channel.send("'questions: shows all pending questions.'")
         await message.channel.send("'professor info 'PROFESSOR NAME': Shows professors department and ratemyprofessor ratings.'")
+        await message.channel.send("'grade distribution 'SUBJECT''CATALOG NUMBER''SEMESTER''YEAR':\
+             Shows grade distributions for all sections and professors.'")
+        #grade distribution CS 2336 Summer 2018
     elif message.content == 'attendance':
         await message.channel.send(attendance)
     elif message.content == 'clear attendance':
@@ -60,8 +66,73 @@ async def on_message(message):
             await message.channel.send("Professor not found")
         await message.channel.send("https://www.ratemyprofessors.com/campusRatings.jsp?sid=1273")
     #Grade Distribution Graph
+    #TODO: input validation
     elif message.content.startswith('grade distribution'):
-        await message.channel.send(file=discord.File(r'C:\Users\iront\utdhackathon\Figure_1.png'))
-        
+        # Format input
+        substr = message.content[19:]
+        values = substr.split(' ')
+        subj = values[0]
+        catalogNum = values[1]
+        term = values[3] + ' ' + values[2]
+        # Load json file
+        if term == '2020 Summer':
+            data = open(r'Summer 2020\summer2020.json','r')
+        elif term == '2019 Summer':
+            data = open(r'Summer 2019\Summer2019.json','r')
+        elif term == '2018 Summer':
+            data = open(r'Summer 2018\summer2018.json','r')
+        elif term == '2020 Spring':
+            data = open(r'Spring 2020\spring2020.json','r')
+        elif term == '2019 Spring':
+            data = open(r'Spring 2019\spring2019.json','r')
+        elif term == '2018 Spring':
+            data = open(r'Spring 2018\spring2018.json','r')
+        elif term == '2019 Fall':
+            data = open(r'Fall 2019\Fall2019.json','r')
+        elif term == '2018 Fall':
+            data = open(r'Fall 2018\fall2018.json','r')
+        elif term == '2017 Fall':
+            data = open(r'Fall 2017\fall2017.json','r')
+        dict = json.load(data)
+        # Select class section
+        grade_dist = []
+        for keyval in dict:
+            if term == '2020 Summer':
+                if (term.lower() == keyval['term'].lower()) and\
+                    (catalogNum.lower() == keyval['Catalog\nNumber'].lower())and (subj.lower() == keyval['subj'].lower()):
+                    grade_dist.append(keyval)
+            else:
+                if (term.lower() == keyval['term'].lower()) and\
+                    (catalogNum.lower() == keyval['num'].lower()) and (subj.lower() == keyval['subj'].lower()):
+                    grade_dist.append(keyval)
+        for distribution in grade_dist:
+            # Create arrays with letter grades and their counts
+            gradeLetters = ['A+','A','A-','B+','B','B-','C+','C','C-','D+','D','D-','F']
+            gradeCount = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            grades = distribution['grades']
+            for key in grades:
+                counter = 0
+                for letter in gradeLetters:
+                    if key == letter:
+                        if type(10) == type(grades[key]):
+                            gradeCount[counter] = grades[key]
+                        else:
+                            gradeCount[counter] = int(grades[key])
+                    counter += 1
+            # Create bar graph
+            fig = plt.figure(figsize=(7,5))
+            positions = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+            plt.bar(positions, gradeCount, width=0.5, color=['forestgreen','limegreen','yellowgreen','lime','greenyellow','khaki','gold','orange',\
+                'tomato','orangered','red','firebrick','darkred'])
+            plt.xticks(positions, gradeLetters)
+            plt.ylabel("Number of Students")
+            plt.title(subj + " " + catalogNum + "." + distribution['sect'] + "\n" + distribution['prof'] + " - " + term)
+            # Display image
+            fig.savefig('temp.png')
+            myfile = discord.File(open('temp.png', 'rb'))
+            await message.channel.send(file=myfile)
+        #If no sections of the class were given during the semester
+        if len(grade_dist) == 0:
+            await message.channel.send("No sections of this class during this semester")
         
 client.run("ODE1MjgzODE0MTI1MDEwOTU2.YDqKOA.kRb_d9plY7G2tgqGchZGp_hxeJI")
