@@ -5,7 +5,8 @@ import base64
 import ratemyprofessor
 import json
 import matplotlib.pyplot as plt
-
+from datetime import datetime
+import asyncio
 
 client = discord.Client()
 
@@ -134,5 +135,19 @@ async def on_message(message):
         #If no sections of the class were given during the semester
         if len(grade_dist) == 0:
             await message.channel.send("No sections of this class during this semester")
+    elif message.content.startswith('remindme'):
+        user = message.author
+        now = datetime.now()
+        substr = message.content[9:]
+        values = substr.split(' ', 2)
+        timeInt = int(values[0])
+        timeType = values[1]    #Hours, min, or sec
+        remindMsg = values[2]
+        seconds = 0
+        if timeType == 'sec':
+            seconds += timeInt
+        await message.channel.send("Alright, I will remind you about \"" + remindMsg + "\" in " + str(timeInt) + " " + timeType + ".")
+        await asyncio.sleep(seconds)
+        await message.channel.send("Hi, you asked me to remind you about \"" + remindMsg + "\" " + str(timeInt) + " " + timeType + " ago.")
         
 client.run("ODE1MjgzODE0MTI1MDEwOTU2.YDqKOA.kRb_d9plY7G2tgqGchZGp_hxeJI")
