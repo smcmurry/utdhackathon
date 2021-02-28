@@ -14,7 +14,8 @@ authHeaderValue = base64.b64encode(authData.encode('ascii')).decode('ascii')
 
 attendance = []
 questions = []
-teachers = [271501547219845120]
+teachers = []
+resources = []
 
 @client.event
 async def on_ready():
@@ -30,6 +31,7 @@ async def on_message(message):
     if message.content == 'hello':
         await message.channel.send("Hello, there.")
     elif message.content == 'help':
+        await message.channel.send("'here: adds student to list of attendance'")
         await message.channel.send("'attendance: shows list of students that attended class.'")
         await message.channel.send("'clear attendance: clears list of students for next class.'")
         await message.channel.send("'? 'QUESTION': adds question to pending question list.'")
@@ -43,6 +45,11 @@ async def on_message(message):
     elif message.content == 'clear attendance':
         await message.channel.send("Attendance Cleared!")
         attendance.clear()
+    elif message.content.startswith('add resource'):
+        resources.append(message.content[12:])
+        await message.channel.send("Resource Added!")
+    elif message.content == 'resources':
+        await message.channel.send(resources)
     elif message.content == 'encode key':
         await message.channel.send(base64.b64encode(authData.encode('ascii')).decode('ascii'))
     #elif message.content == 'list professors':
