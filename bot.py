@@ -4,7 +4,6 @@ import discord
 import base64
 import ratemyprofessor
 
-
 client = discord.Client()
 
 authData = "5d5fb173-1f9a-477a-aeda-4832cd1c7392:ENGNPhD73LgiOzbZIdqDKC5JrFr8TDDJ"
@@ -27,12 +26,6 @@ async def on_message(message):
         await message.delete()
     if message.content == 'hello':
         await message.channel.send("Hello, there.")
-    elif message.content == 'help':
-        await message.channel.send("'attendance: shows list of students that attended class.'")
-        await message.channel.send("'clear attendance: clears list of students for next class.'")
-        await message.channel.send("'? 'QUESTION': adds question to pending question list.'")
-        await message.channel.send("'questions: shows all pending questions.'")
-        await message.channel.send("'professor info 'PROFESSOR NAME': Shows professors department and ratemyprofessor ratings.'")
     elif message.content == 'attendance':
         await message.channel.send(attendance)
     elif message.content == 'clear attendance':
@@ -42,10 +35,10 @@ async def on_message(message):
         await message.channel.send(base64.b64encode(authData.encode('ascii')).decode('ascii'))
     #elif message.content == 'list professors':
     #   await message.channel.send(ratemyprofessor)
-    elif message.content.startswith('?'):
-        questions.append(message.content[1:])
-    elif message.content == 'questions':
-        await message.channel.send(questions)
+    elif message.content.startswith('question'):
+        questions.append(message.content[8:])
+        client.send_message()
+    
     elif message.content.startswith('professor info'):
         professor = ratemyprofessor.get_professor_by_school_and_name(ratemyprofessor.get_school_by_name("University of Texas at Dallas"), message.content[14:])
         if professor is not None:
@@ -60,7 +53,9 @@ async def on_message(message):
         else:
             await message.channel.send("Professor not found")
         await message.channel.send("https://www.ratemyprofessors.com/campusRatings.jsp?sid=1273")
-    ####CODE FOR GRAPH HERE###
+    #Grade Distribution Graph
+    elif message.content.startswith('grade distribution'):
+        await message.channel.send(file=discord.File(r'C:\Users\iront\utdhackathon\Figure_1.png'))
         
         
 client.run("ODE1MjgzODE0MTI1MDEwOTU2.YDqKOA.kRb_d9plY7G2tgqGchZGp_hxeJI")
