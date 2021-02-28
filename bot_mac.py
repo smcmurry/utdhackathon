@@ -5,8 +5,7 @@ import base64
 import ratemyprofessor
 import json
 import matplotlib.pyplot as plt
-from datetime import datetime
-import asyncio
+
 
 client = discord.Client()
 
@@ -17,7 +16,6 @@ attendance = []
 questions = []
 teachers = [271501547219845120]
 resources = []
-
 
 @client.event
 async def on_ready():
@@ -102,23 +100,23 @@ async def on_message(message):
         term = values[3] + ' ' + values[2]
         # Load json file
         if term == '2020 Summer':
-            data = open(r'Summer 2020\summer2020.json','r')
+            data = open(r'Data/Summer 2020/summer2020.json','r')
         elif term == '2019 Summer':
-            data = open(r'Summer 2019\Summer2019.json','r')
+            data = open(r'Data/Summer 2019/Summer2019.json','r')
         elif term == '2018 Summer':
-            data = open(r'Summer 2018\summer2018.json','r')
+            data = open(r'Data/Summer 2018/summer2018.json','r')
         elif term == '2020 Spring':
-            data = open(r'Spring 2020\spring2020.json','r')
+            data = open(r'Data/Spring 2020/spring2020.json','r')
         elif term == '2019 Spring':
-            data = open(r'Spring 2019\spring2019.json','r')
+            data = open(r'Data/Spring 2019/spring2019.json','r')
         elif term == '2018 Spring':
-            data = open(r'Spring 2018\spring2018.json','r')
+            data = open(r'Data/Spring 2018/spring2018.json','r')
         elif term == '2019 Fall':
-            data = open(r'Fall 2019\Fall2019.json','r')
+            data = open(r'Data/Fall 2019/Fall2019.json','r')
         elif term == '2018 Fall':
-            data = open(r'Fall 2018\fall2018.json','r')
+            data = open(r'Data/Fall 2018/fall2018.json','r')
         elif term == '2017 Fall':
-            data = open(r'Fall 2017\fall2017.json','r')
+            data = open(r'Data/Fall 2017/fall2017.json','r')
         dict = json.load(data)
         # Select class section
         grade_dist = []
@@ -160,19 +158,6 @@ async def on_message(message):
         #If no sections of the class were given during the semester
         if len(grade_dist) == 0:
             await message.channel.send("No sections of this class during this semester")
-    elif message.content.startswith('remindme'):
-        user = message.author
-        now = datetime.now()
-        substr = message.content[9:]
-        values = substr.split(' ', 2)
-        timeInt = int(values[0])
-        timeType = values[1]    #Hours, min, or sec
-        remindMsg = values[2]
-        seconds = 0
-        if timeType == 'sec':
-            seconds += timeInt
-        await message.channel.send("Alright, I will remind you about \"" + remindMsg + "\" in " + str(timeInt) + " " + timeType + ".")
-        await asyncio.sleep(seconds)
-        await message.channel.send("Hi, you asked me to remind you about \"" + remindMsg + "\" " + str(timeInt) + " " + timeType + " ago.")
         
 client.run("ODE1MjgzODE0MTI1MDEwOTU2.YDqKOA.kRb_d9plY7G2tgqGchZGp_hxeJI")
+
