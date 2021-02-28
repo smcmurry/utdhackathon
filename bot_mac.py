@@ -46,6 +46,8 @@ async def on_message(message):
         await message.channel.send("'professor info 'PROFESSOR NAME': Shows professors department and ratemyprofessor ratings.'")
         await message.channel.send("'grade distribution 'SUBJECT''CATALOG NUMBER''SEMESTER''YEAR':\
              Shows grade distributions for all sections and professors.'")
+        await message.channel.send("'remindme 'UNITS OF TIME' 'TIME UNIT(days/hrs/min/sec)' 'REMIND MESSAGE':\
+             Sends a reminder'")
         #grade distribution CS 2336 Summer 2018
     elif message.content.startswith('add professor'):
         for teacher in teachers:
