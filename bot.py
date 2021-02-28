@@ -3,9 +3,7 @@ import os
 import discord
 import base64
 import ratemyprofessor
-from dotenv import load_dotenv
 
-load_dotenv()
 
 client = discord.Client()
 
@@ -29,6 +27,12 @@ async def on_message(message):
         await message.delete()
     if message.content == 'hello':
         await message.channel.send("Hello, there.")
+    elif message.content == 'help':
+        await message.channel.send("'attendance: shows list of students that attended class.'")
+        await message.channel.send("'clear attendance: clears list of students for next class.'")
+        await message.channel.send("'? 'QUESTION': adds question to pending question list.'")
+        await message.channel.send("'questions: shows all pending questions.'")
+        await message.channel.send("'professor info 'PROFESSOR NAME': Shows professors department and ratemyprofessor ratings.'")
     elif message.content == 'attendance':
         await message.channel.send(attendance)
     elif message.content == 'clear attendance':
