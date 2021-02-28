@@ -5,12 +5,8 @@ import base64
 import ratemyprofessor
 import json
 import matplotlib.pyplot as plt
-<<<<<<< HEAD
-import re
-=======
 from datetime import datetime
 import asyncio
->>>>>>> 21e1d024964e28e449b778bc530d71be4998125d
 
 client = discord.Client()
 
