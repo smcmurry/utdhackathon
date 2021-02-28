@@ -88,6 +88,14 @@ async def on_message(message):
     elif message.content == 'answered questions':
         for question in answered_questions:
             await message.channel.send(question + "\n\n" + answered_questions[question])
+    elif message.content.startswith('dict'):
+        s=message.content.split()
+        word=s[1]
+        url="https://api.dictionaryapi.dev/api/v2/entries/en_US/"
+        url+=word
+        r=requests.get(url)
+        meaning=r.json()[0]["meanings"][0]["definitions"][0]["definition"]
+        await message.channel.send("The meaning of "+word+ " is "+meaning)
     elif message.content.startswith('professor info'):
         professor = ratemyprofessor.get_professor_by_school_and_name(ratemyprofessor.get_school_by_name("University of Texas at Dallas"), message.content[14:])
         if professor is not None:
