@@ -7,6 +7,7 @@ import json
 import matplotlib.pyplot as plt
 from datetime import datetime
 import asyncio
+import requests
 
 client = discord.Client()
 
@@ -200,5 +201,13 @@ async def on_message(message):
         await message.channel.send("Alright, I will remind you about \"" + remindMsg + "\" in " + str(timeInt) + " " + timeType + ".")
         await asyncio.sleep(seconds)
         await message.author.send("Hi, you asked me to remind you about \"" + remindMsg + "\" " + str(timeInt) + " " + timeType + " ago.")
+    elif message.content.startswith('dict'):
+        s=message.content.split()
+        word=s[1]
+        url="https://api.dictionaryapi.dev/api/v2/entries/en_US/"
+        url+=word
+        r=requests.get(url)
+        meaning=r.json()[0]["meanings"][0]["definitions"][0]["definition"]
+        await message.channel.send("The meaning of "+word+ " is "+meaning)
         
 client.run("ODE1MjgzODE0MTI1MDEwOTU2.YDqKOA.kRb_d9plY7G2tgqGchZGp_hxeJI")
