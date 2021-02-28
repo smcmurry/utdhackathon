@@ -26,6 +26,12 @@ async def on_message(message):
         await message.delete()
     if message.content == 'hello':
         await message.channel.send("Hello, there.")
+    elif message.content == 'help':
+        await message.channel.send("'attendance: shows list of students that attended class.'")
+        await message.channel.send("'clear attendance: clears list of students for next class.'")
+        await message.channel.send("'? 'QUESTION': adds question to pending question list.'")
+        await message.channel.send("'questions: shows all pending questions.'")
+        await message.channel.send("'professor info 'PROFESSOR NAME': Shows professors department and ratemyprofessor ratings.'")
     elif message.content == 'attendance':
         await message.channel.send(attendance)
     elif message.content == 'clear attendance':
@@ -35,10 +41,10 @@ async def on_message(message):
         await message.channel.send(base64.b64encode(authData.encode('ascii')).decode('ascii'))
     #elif message.content == 'list professors':
     #   await message.channel.send(ratemyprofessor)
-    elif message.content.startswith('question'):
-        questions.append(message.content[8:])
-        client.send_message()
-    
+    elif message.content.startswith('?'):
+        questions.append(message.content[1:])
+    elif message.content == 'questions':
+         await message.channel.send(questions)
     elif message.content.startswith('professor info'):
         professor = ratemyprofessor.get_professor_by_school_and_name(ratemyprofessor.get_school_by_name("University of Texas at Dallas"), message.content[14:])
         if professor is not None:
