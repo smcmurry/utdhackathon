@@ -38,10 +38,10 @@ async def on_message(message):
         await message.channel.send(base64.b64encode(authData.encode('ascii')).decode('ascii'))
     #elif message.content == 'list professors':
     #   await message.channel.send(ratemyprofessor)
-    elif message.content.startswith('question'):
-        questions.append(message.content[8:])
-        client.send_message()
-    
+    elif message.content.startswith('?'):
+        questions.append(message.content[1:])
+    elif message.content == 'questions':
+        await message.channel.send(questions)
     elif message.content.startswith('professor info'):
         professor = ratemyprofessor.get_professor_by_school_and_name(ratemyprofessor.get_school_by_name("University of Texas at Dallas"), message.content[14:])
         if professor is not None:
