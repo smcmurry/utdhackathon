@@ -45,6 +45,8 @@ async def on_message(message):
         await message.channel.send("'professor info 'PROFESSOR NAME': Shows professors department and ratemyprofessor ratings.'")
         await message.channel.send("'grade distribution 'SUBJECT''CATALOG NUMBER''SEMESTER''YEAR':\
              Shows grade distributions for all sections and professors.'")
+        await message.channel.send("'remindme 'UNITS OF TIME' 'TIME UNIT(days/hrs/min/sec)' 'REMIND MESSAGE':\
+             Sends a reminder'")
         #grade distribution CS 2336 Summer 2018
     elif message.content.startswith('add professor'):
         for teacher in teachers:
@@ -180,7 +182,6 @@ async def on_message(message):
         if len(grade_dist) == 0:
             await message.channel.send("No sections of this class during this semester")
     elif message.content.startswith('remindme'):
-        user = message.author
         now = datetime.now()
         substr = message.content[9:]
         values = substr.split(' ', 2)
@@ -190,8 +191,14 @@ async def on_message(message):
         seconds = 0
         if timeType == 'sec':
             seconds += timeInt
+        elif timeType == 'min':
+            seconds += timeInt * 60
+        elif timeType == 'min':
+            seconds += timeInt * 60 * 60
+        elif timeType == 'days':
+            seconds += timeInt * 60 * 60 * 24
         await message.channel.send("Alright, I will remind you about \"" + remindMsg + "\" in " + str(timeInt) + " " + timeType + ".")
         await asyncio.sleep(seconds)
-        await message.channel.send("Hi, you asked me to remind you about \"" + remindMsg + "\" " + str(timeInt) + " " + timeType + " ago.")
+        await message.author.send("Hi, you asked me to remind you about \"" + remindMsg + "\" " + str(timeInt) + " " + timeType + " ago.")
         
 client.run("ODE1MjgzODE0MTI1MDEwOTU2.YDqKOA.kRb_d9plY7G2tgqGchZGp_hxeJI")
