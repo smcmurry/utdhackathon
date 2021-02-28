@@ -41,6 +41,7 @@ async def on_message(message):
         await message.channel.send("'clear attendance: clears list of students for next class.(PROFESSOR ONLY)'")
         await message.channel.send("'? 'QUESTION': adds question to pending question list.'")
         await message.channel.send("'questions: shows all pending questions.'")
+        await message.channel.send("'! 'QUESTION NUMBER' 'ANSWER': removes the question from pending questions and adds it to answered questions with an answer.'")
         await message.channel.send("'professor info 'PROFESSOR NAME': Shows professors department and ratemyprofessor ratings.'")
         await message.channel.send("'grade distribution 'SUBJECT''CATALOG NUMBER''SEMESTER''YEAR':\
              Shows grade distributions for all sections and professors.'")
@@ -77,8 +78,18 @@ async def on_message(message):
     #   await message.channel.send(ratemyprofessor)
     elif message.content.startswith('?'):
         questions.append(message.content[1:])
+        await message.channel.send("Question Added!")
+    elif message.content.startswith('!'):
+        number = int(message.content[2:3])
+        answer = message.content[3:]
+        answered_questions[questions[number-1]] = answer
+        await message.channel.send("Answer Added to Question " + str(number))
     elif message.content == 'questions':
-         await message.channel.send(questions)
+        for i in range(0,len(questions)):
+            await message.channel.send(str(i+1) + ".) " + questions[i])
+    elif message.content == 'answered questions':
+        for question in answered_questions:
+            await message.channel.send(question + "\n\n" + answered_questions[question])
     elif message.content.startswith('professor info'):
         professor = ratemyprofessor.get_professor_by_school_and_name(ratemyprofessor.get_school_by_name("University of Texas at Dallas"), message.content[14:])
         if professor is not None:
